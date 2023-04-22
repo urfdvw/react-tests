@@ -6,7 +6,7 @@ function App() {
     const [todoList, setTodoList] = useState([])
     // {id, name, done}
 
-    function handleSubmit (event) {
+    function handleSubmit(event) {
         event.preventDefault()
         setTodoList((currentTodoList) => {
             const newTodoList = [
@@ -20,7 +20,24 @@ function App() {
             setItem('')
             return newTodoList
         })
-        console.log(todoList)
+    }
+
+    function handleToggle(event) {
+        setTodoList(currentTodoList => currentTodoList.map(todo =>
+            todo.id !== event.target.id ? todo : {
+                ...todo, done: !todo.done
+            })
+        )
+    }
+
+    function handleDelete(event) {
+        setTodoList((currentTodoList) => {
+            [
+                ...currentTodoList.filter(todo => {
+                    todo.id === event.target.key
+                })
+            ]
+        })
     }
 
     return (
@@ -42,13 +59,20 @@ function App() {
             </form>
             <h1>Todo List</h1>
             <ul className='list'>
-                <li>
-                    <label>
-                        <input type='checkbox' />
-                        Item 1
-                    </label>
-                    <button className='btn-danger btn'>Delete</button>
-                </li>
+                {todoList.map(x => (
+                    <li key={x.id}>
+                        <label>
+                            <input
+                                type='checkbox'
+                                checked={x.done}
+                                onChange={handleToggle}
+                                id={x.id}
+                            />
+                            {x.name}
+                        </label>
+                        <button className='btn-danger btn'>Delete</button>
+                    </li>
+                ))}
             </ul>
         </>
     )
