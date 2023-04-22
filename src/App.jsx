@@ -23,21 +23,21 @@ function App() {
     }
 
     function handleToggle(event) {
-        setTodoList(currentTodoList => currentTodoList.map(todo =>
-            todo.id !== event.target.id ? todo : {
-                ...todo, done: !todo.done
-            })
+        setTodoList(
+            currentTodoList => currentTodoList.map(
+                todo => todo.id !== event.target.closest("li").id ? todo : {
+                    ...todo, done: !todo.done
+                }
+            )
         )
     }
 
     function handleDelete(event) {
-        setTodoList((currentTodoList) => {
-            [
-                ...currentTodoList.filter(todo => {
-                    todo.id === event.target.key
-                })
-            ]
-        })
+        setTodoList(
+            currentTodoList => currentTodoList.filter(
+                todo => todo.id !== event.target.closest("li").id
+            )
+        )
     }
 
     return (
@@ -60,17 +60,16 @@ function App() {
             <h1>Todo List</h1>
             <ul className='list'>
                 {todoList.map(x => (
-                    <li key={x.id}>
+                    <li key={x.id} id={x.id}>
                         <label>
                             <input
                                 type='checkbox'
                                 checked={x.done}
                                 onChange={handleToggle}
-                                id={x.id}
                             />
                             {x.name}
                         </label>
-                        <button className='btn-danger btn'>Delete</button>
+                        <button className='btn-danger btn' onClick={handleDelete}>Delete</button>
                     </li>
                 ))}
             </ul>
