@@ -1,14 +1,24 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './styles.css'
 
 function App() {
     const [item, setItem] = useState("")
-    const [todoList, setTodoList] = useState([])
-    // {id, name, done}
+    const [todoList, setTodoList] = useState(() => {
+        const localTodoList = localStorage.getItem('todoList')
+        return localTodoList ? JSON.parse(localTodoList) : []
+    }) // {id, name, done}
+    
+
+    useEffect(() => {
+        localStorage.setItem('todoList', JSON.stringify(todoList))
+    }, [todoList])
 
     function handleSubmit(event) {
         event.preventDefault()
         setTodoList((currentTodoList) => {
+            if (item.length === 0) {
+                return currentTodoList
+            }
             const newTodoList = [
                 ...currentTodoList,
                 {
@@ -59,6 +69,7 @@ function App() {
             </form>
             <h1>Todo List</h1>
             <ul className='list'>
+                {todoList.length === 0 ? "No Todos" : ""}
                 {todoList.map(x => (
                     <li key={x.id} id={x.id}>
                         <label>
